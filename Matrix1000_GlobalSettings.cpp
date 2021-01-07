@@ -67,4 +67,9 @@ namespace midikraft {
 		return {};
 	}
 
+	std::vector<DataFileLoadCapability::DataFileImportDescription> Matrix1000_GlobalSettings_Loader::dataFileImportChoices() const
+	{
+		return {};
+	}
+
 }
