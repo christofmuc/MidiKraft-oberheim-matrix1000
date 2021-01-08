@@ -88,7 +88,7 @@ namespace midikraft {
 		// GlobalSettingsCapability
 		virtual void setGlobalSettingsFromDataFile(std::shared_ptr<DataFile> dataFile) override;
 		virtual std::vector<std::shared_ptr<TypedNamedValue>> getGlobalSettings() override;
-		virtual DataFileLoadCapability *loader() override;
+		virtual std::shared_ptr<DataFileLoadCapability> loader() override;
 		virtual int settingsDataFileType() const override;
 
 		// Matrix1000 specific functions
@@ -132,7 +132,7 @@ namespace midikraft {
 
 		void initGlobalSettings();
 
-		Matrix1000_GlobalSettings_Loader *globalSettingsLoader_; // Sort of a pimpl pattern
+		std::shared_ptr<Matrix1000_GlobalSettings_Loader> globalSettingsLoader_; // Sort of a pimpl pattern
 		TypedNamedValueSet globalSettings_;
 		ValueTree globalSettingsTree_;
 		GlobalSettingsListener updateSynthWithGlobalSettingsListener_;

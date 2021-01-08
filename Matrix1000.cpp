@@ -513,7 +513,7 @@ namespace midikraft {
 		return globalSettings_;
 	}
 
-	midikraft::DataFileLoadCapability * Matrix1000::loader()
+	std::shared_ptr<DataFileLoadCapability> Matrix1000::loader()
 	{
 		return globalSettingsLoader_;
 	}
@@ -533,13 +533,12 @@ namespace midikraft {
 
 	Matrix1000::Matrix1000() : updateSynthWithGlobalSettingsListener_(this)
 	{
-		globalSettingsLoader_ = new Matrix1000_GlobalSettings_Loader(this);
+		globalSettingsLoader_ = std::make_shared<Matrix1000_GlobalSettings_Loader>(this);
 		initGlobalSettings();
 	}
 
 	Matrix1000::~Matrix1000()
 	{
-		delete globalSettingsLoader_;
 	}
 
 	std::string Matrix1000::getName() const
