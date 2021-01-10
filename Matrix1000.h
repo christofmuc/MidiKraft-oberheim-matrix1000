@@ -90,6 +90,7 @@ namespace midikraft {
 		virtual std::vector<std::shared_ptr<TypedNamedValue>> getGlobalSettings() override;
 		virtual std::shared_ptr<DataFileLoadCapability> loader() override;
 		virtual int settingsDataFileType() const override;
+		virtual DataFileLoadCapability::DataFileImportDescription settingsImport() const override;
 
 		// Matrix1000 specific functions
 		bool isSplitPatch(MidiMessage const &message) const;

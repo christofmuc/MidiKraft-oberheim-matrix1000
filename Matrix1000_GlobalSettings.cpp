@@ -22,7 +22,7 @@ namespace midikraft {
 	{
 	}
 
-	std::vector<juce::MidiMessage> midikraft::Matrix1000_GlobalSettings_Loader::requestDataItem(int itemNo, int dataTypeID)
+	std::vector<juce::MidiMessage> midikraft::Matrix1000_GlobalSettings_Loader::requestDataItem(int itemNo, DataStreamType dataTypeID)
 	{
 		ignoreUnused(itemNo, dataTypeID);
 		if (matrix1000_) {
@@ -31,13 +31,7 @@ namespace midikraft {
 		return { };
 	}
 
-	int midikraft::Matrix1000_GlobalSettings_Loader::numberOfDataItemsPerType(int dataTypeID) const
-	{
-		ignoreUnused(dataTypeID);
-		return 1;
-	}
-
-	bool midikraft::Matrix1000_GlobalSettings_Loader::isDataFile(const MidiMessage &message, int dataTypeID) const
+	bool midikraft::Matrix1000_GlobalSettings_Loader::isDataFile(const MidiMessage &message, DataFileType dataTypeID) const
 	{
 		ignoreUnused(dataTypeID);
 		return matrix1000_
@@ -47,11 +41,11 @@ namespace midikraft {
 			&& message.getSysExData()[3] == 0x03; /* Matrix 1000 */
 	}
 
-	std::vector<std::shared_ptr<midikraft::DataFile>> midikraft::Matrix1000_GlobalSettings_Loader::loadData(std::vector<MidiMessage> messages, int dataTypeID) const
+	std::vector<std::shared_ptr<midikraft::DataFile>> midikraft::Matrix1000_GlobalSettings_Loader::loadData(std::vector<MidiMessage> messages, DataStreamType dataTypeID) const
 	{
 		std::vector<std::shared_ptr<midikraft::DataFile>> result;
 		for (auto message : messages) {
-			if (isDataFile(message, dataTypeID)) {
+			if (isPartOfDataFileStream(message, dataTypeID)) {
 				// Extract data from byte 4 onward
 				std::vector<uint8> syx(message.getSysExData() + 4, message.getSysExData() + message.getSysExDataSize());
 				jassert(syx.size() == 345);
@@ -65,6 +59,18 @@ namespace midikraft {
 	{
 		// No user visible data types
 		return {};
+	}
+
+	int Matrix1000_GlobalSettings_Loader::numberOfMidiMessagesPerStreamType(DataStreamType dataTypeID) const
+	{
+		ignoreUnused(dataTypeID);
+		return 1;
+	}
+
+	bool Matrix1000_GlobalSettings_Loader::isPartOfDataFileStream(const MidiMessage &message, DataStreamType dataTypeID) const
+	{
+		ignoreUnused(dataTypeID);
+		return isDataFile(message, DataFileType(Matrix1000::DF_MATRIX1000_SETTINGS));
 	}
 
 	std::vector<DataFileLoadCapability::DataFileImportDescription> Matrix1000_GlobalSettings_Loader::dataFileImportChoices() const

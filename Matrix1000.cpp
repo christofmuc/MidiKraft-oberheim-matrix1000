@@ -275,7 +275,7 @@ namespace midikraft {
 	{
 		switch (streamType) {
 		case StreamLoadCapability::StreamType::BANK_DUMP:
-			return isSingleProgramDump(message) || isSplitPatch(message) || globalSettingsLoader_->isDataFile(message, 0);
+			return isSingleProgramDump(message) || isSplitPatch(message) || globalSettingsLoader_->isDataFile(message, DataFileType(Matrix1000::PATCH));
 		case StreamLoadCapability::StreamType::EDIT_BUFFER_DUMP:
 			return isEditBufferDump(message);
 		default:
@@ -299,7 +299,7 @@ namespace midikraft {
 				else if (isSplitPatch(message)) {
 					split++;
 				}
-				else if (globalSettingsLoader_->isDataFile(message, 0 /* TODO this is ignored */)) {
+				else if (globalSettingsLoader_->isDataFile(message, DataFileType(Matrix1000::DF_MATRIX1000_SETTINGS))) {
 					master++;
 				}
 				break;
@@ -343,7 +343,7 @@ namespace midikraft {
 				// This code will be reached for the message format "single patch data to edit buffer", which the M1k will never generate, but I will
 				result.push_back(patchFromSysex(message));
 			}
-			else if (isSplitPatch(message) || globalSettingsLoader_->isDataFile(message, 0)) {
+			else if (isSplitPatch(message) || globalSettingsLoader_->isDataFile(message, DataFileType(Matrix1000::DF_MATRIX1000_SETTINGS))) {
 				// Ignore other messages like global settings and fake split patches
 			}
 			else {
@@ -521,6 +521,11 @@ namespace midikraft {
 	int Matrix1000::settingsDataFileType() const
 	{
 		return DF_MATRIX1000_SETTINGS;
+	}
+
+	midikraft::DataFileLoadCapability::DataFileImportDescription Matrix1000::settingsImport() const
+	{
+		return { DataStreamType(DF_MATRIX1000_SETTINGS), "Matrix 1000 Master Data", 0 };
 	}
 
 	std::vector<juce::MidiMessage> Matrix1000::patchToSysex(std::shared_ptr<DataFile> patch) const
