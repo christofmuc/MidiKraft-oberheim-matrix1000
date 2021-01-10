@@ -61,12 +61,6 @@ namespace midikraft {
 		return {};
 	}
 
-	int Matrix1000_GlobalSettings_Loader::numberOfMidiMessagesPerStreamType(DataStreamType dataTypeID) const
-	{
-		ignoreUnused(dataTypeID);
-		return 1;
-	}
-
 	bool Matrix1000_GlobalSettings_Loader::isPartOfDataFileStream(const MidiMessage &message, DataStreamType dataTypeID) const
 	{
 		ignoreUnused(dataTypeID);
